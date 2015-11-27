@@ -8,7 +8,6 @@ var i = 0;
 var c = 0;
 var o = 0;
 var separators = ["-","_","-","_","-","_","_","|","~","~",".",".",".",".",".",".","","","",""]; //"!#$%&'*+-/=?^_`{|}~..........";
-
 var emailDomains = ["aol.com", "att.net", "comcast.net", "facebook.com", "gmail.com", "gmx.com", "googlemail.com",
   "google.com", "hotmail.com", "hotmail.co.uk", "mac.com", "me.com", "mail.com", "msn.com",  "live.com", "sbcglobal.net",
   "verizon.net", "yahoo.com", "yahoo.co.uk", "email.com", "games.com", "gmx.net", "hush.com", "hushmail.com", "icloud.com",
@@ -96,7 +95,7 @@ function PostCode(id, name, email) {
       var now = moment().utcOffset(120).format("YYYY-MM-DD HH:mm:ss");
       var msg = now + ": " + str + "    " + cc + ": " + name + "(" + email + ")";
       if (i++<15000) {
-        var sleep = getRandomInt(2000,1000*60*10);
+        var sleep = getRandomInt(2000,1000*60*getRandomInt(1,getRandomInt(1,40)));
         fs.appendFile("./posts.txt", msg + "\r\n", function(err) {
           if(err) {
             return console.log(err);
@@ -144,11 +143,6 @@ post = function() {
   }
   var email = (ename + "@" + emailDomain).toLowerCase();
   PostCode(id, name, email);
-/*
-  console.log(randomFirst + " " + randomLast + "(" + email + ")");
-  while (i++ < 8)
-    setTimeout(post, 500)
-*/
 };
 
 post();
