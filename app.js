@@ -41,8 +41,22 @@ var ids = [
   "563d0d51340b0",      // Chris
   "563d0d51340b0",      // Chris
   "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
+  "563d0d51340b0",      // Chris
 //  "5630ee522478b",      // Arthur
-  "5607932d7c149",      // Hon�rio
+//  "5607932d7c149",      // Hon�rio
   "5607932d7c149",      // Hon�rio
   "56346e42e5fab"      // FABRICIO
 ];
@@ -95,7 +109,9 @@ function PostCode(id, name, email) {
       var now = moment().utcOffset(120).format("YYYY-MM-DD HH:mm:ss");
       var msg = now + ": " + str + "    " + cc + ": " + name + "(" + email + ")";
       if (i++<15000) {
-        var sleep = getRandomInt(2000,1000*60*getRandomInt(1,getRandomInt(1,40)));
+        var sleep;
+//        sleep = getRandomInt(1000,1000*5*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,1)))));
+        sleep = getRandomInt(1000,1000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
         fs.appendFile("./posts.txt", msg + "\r\n", function(err) {
           if(err) {
             return console.log(err);
