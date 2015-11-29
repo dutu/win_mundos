@@ -1,4 +1,16 @@
 {
   "name": "win_mundos",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "main": "app.js",
+  "scripts" : {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "moment": "*",
+    "random-name": "*"
+  },
+  "engines": {
+    "node": "4.2.x",
+    "npm": "2.x.x"
+  }
 }
