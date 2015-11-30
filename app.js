@@ -4,7 +4,8 @@ var randomName = require('random-name');
 var moment = require('moment');
 var fs = require('fs');
 
-var i = 0;
+var i = 1;
+var postNo = 0;
 var c = 0;
 var o = 0;
 var separators = ["-","_","-","_","-","_","_","|","~","~",".",".",".",".",".",".","","","",""]; //"!#$%&'*+-/=?^_`{|}~..........";
@@ -54,18 +55,19 @@ var ids = [
   "563d0d51340b0",      // Chris
   "563d0d51340b0",      // Chris
   "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-//  "5630ee522478b",      // Arthur
-//  "5607932d7c149",      // Hon�rio
+  "563d0d51340b0"      // Chris
+/*  "5630ee522478b",      // Arthur
+  "563dd437ca2be",      // aurelio
   "5607932d7c149",      // Hon�rio
   "56346e42e5fab"      // FABRICIO
+*/
 ];
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function PostCode(id, name, email) {
+function PostCode(id, name, email, callback) {
   // post string
   var post_data = querystring.stringify({
     "action": "vote_photo",
@@ -108,23 +110,27 @@ function PostCode(id, name, email) {
       }
       var now = moment().utcOffset(120).format("YYYY-MM-DD HH:mm:ss");
       var msg = now + ": " + str + "    " + cc + ": " + name + "(" + email + ")";
-      if (i++<15000) {
-        var sleep;
+      var sleep;
 //        sleep = getRandomInt(1000,1000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
-        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
-        fs.appendFile("./posts.txt", msg + "\r\n", function(err) {
+//        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
+        sleep = 1;
+      console.log(msg);
+        fs.appendFile("./posts.log", msg + "\r\n", function(err) {
           if(err) {
             return console.log(err);
           }
-          console.log(msg);
-          console.log("Sleeping for " + moment.duration(sleep/1000, "seconds").humanize());
-          setTimeout(post, sleep);
+//          console.log("Sleeping for " + moment.duration(sleep/1000, "seconds").humanize());
+//          setTimeout(post, sleep);
         });
-      }
+      if (postNo<1)
+        callback();
     });
 
     res.on('error', function () {
       console.log(str);
+      postNo--;
+      if ( postNo < 1)
+        callback();
     });
   });
 
@@ -133,32 +139,52 @@ function PostCode(id, name, email) {
   req.end();
 }
 
-post = function() {
-  var randomFirst = randomName.first();
-  var randomLast = randomName.last();
-  var name = randomFirst + " " + randomLast;
-  var subFirst = randomFirst.substr(0, getRandomInt(1, randomFirst.length-1));  // take random number of characters from randomFirst
-  var subLast = randomLast.substr(0, getRandomInt(1, randomLast.length-1));     // take random number of characters from randomLast
-  var separator = separators[getRandomInt(0,separators.length-1)];
-  var emailDomain = emailDomains[getRandomInt(0,emailDomains.length-1)];
-  var id = ids[getRandomInt(0, ids.length-1)];
-  var ename;
-  switch (getRandomInt(0,3)) {
-    case 0:
-      ename = subFirst + separator + subLast;
-      break;
-    case 1:
-      ename = subLast + separator + subFirst;
-      break;
-    case 2:
-      ename = subLast;
-      break;
-    case 3:
-      ename = subFirst;
-      break;
+const MAX_VOTES = 1500;
+var startTime = moment();
+
+post = function(callback) {
+  if (i++ < MAX_VOTES+1) {
+    var randomFirst = randomName.first();
+    var randomLast = randomName.last();
+    var name = randomFirst + (getRandomInt(0,1) ? "" :" " + (getRandomInt(0,1) ? randomFirst.substr(0, 1): randomLast));
+    var subFirst = randomFirst.substr(0, getRandomInt(1, randomFirst.length-1));  // take random number of characters from randomFirst
+    var subLast = randomLast.substr(0, getRandomInt(1, randomLast.length-1));     // take random number of characters from randomLast
+    var separator = separators[getRandomInt(0,separators.length-1)];
+    var emailDomain = emailDomains[getRandomInt(0,emailDomains.length-1)];
+    var id = ids[getRandomInt(0, ids.length-1)];
+    var ename;
+    switch (getRandomInt(0,3)) {
+      case 0:
+        ename = subFirst + separator + subLast;
+        break;
+      case 1:
+        ename = subLast + separator + subFirst;
+        break;
+      case 2:
+        ename = subLast;
+        break;
+      case 3:
+        ename = subFirst;
+        break;
+    }
+    var email = (ename + "@" + emailDomain).toLowerCase();
+    postNo++;
+    PostCode(id, name, email, callback);
+    setTimeout(post, 120, callback);
+  } else {
+    var msg1 =  "Done " + postNo + " votes in " + moment().diff(startTime,"seconds") + " seconds!";
+    console.log(msg1);
+    fs.appendFile("./votes.log", msg1 + "\r\n", function(err) {
+      if(err) {
+        return console.log(err);
+      }
+//          console.log("Sleeping for " + moment.duration(sleep/1000, "seconds").humanize());
+//          setTimeout(post, sleep);
+    });
+
   }
-  var email = (ename + "@" + emailDomain).toLowerCase();
-  PostCode(id, name, email);
 };
 
-post();
+post(function() {
+  return;
+});
