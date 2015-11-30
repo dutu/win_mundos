@@ -118,7 +118,7 @@ function PostCode(id, name, email) {
         sleep = getRandomInt(10,1000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,48-SPEED_PER_MIN))));
 //        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
 //        sleep = 1;
-        fs.appendFile("./posts.txt", msg + "\r\n", function(err) {
+        fs.appendFile("./posts.log", msg + "\r\n", function(err) {
           if(err) {
             return console.log(err);
           }
