@@ -3,6 +3,7 @@ var http = require('http');
 var randomName = require('random-name');
 var moment = require('moment');
 var fs = require('fs');
+var BigNumber = require("bignumber.js");
 
 var i = 0;
 var c = 0;
@@ -56,8 +57,10 @@ var ids = [
   "563d0d51340b0",      // Chris
   "563d0d51340b0",      // Chris
 //  "5630ee522478b",      // Arthur
-//  "5607932d7c149",      // Hon�rio
+  "563dd437ca2be",       // Aurelio
+//  "563dd437ca2be",       // Aurelio
   "5607932d7c149",      // Hon�rio
+//  "5607932d7c149",      // Hon�rio
   "56346e42e5fab"      // FABRICIO
 ];
 
@@ -65,6 +68,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const MAX_VOTES = 10000;
+const SPEED_PER_MIN = 18;
 function PostCode(id, name, email) {
   // post string
   var post_data = querystring.stringify({
@@ -108,16 +113,22 @@ function PostCode(id, name, email) {
       }
       var now = moment().utcOffset(120).format("YYYY-MM-DD HH:mm:ss");
       var msg = now + ": " + str + "    " + cc + ": " + name + "(" + email + ")";
-      if (i++<15000) {
+      if (i<MAX_VOTES) {
         var sleep;
-//        sleep = getRandomInt(1000,1000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
-        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
+        sleep = getRandomInt(10,1000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,48-SPEED_PER_MIN))));
+//        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
+//        sleep = 1;
         fs.appendFile("./posts.txt", msg + "\r\n", function(err) {
           if(err) {
             return console.log(err);
           }
           console.log(msg);
-          console.log("Sleeping for " + moment.duration(sleep/1000, "seconds").humanize());
+          var seconds = moment().diff(startTime,"seconds");
+          var msgSec = Math.round(sleep/100)/10;
+          var msgSpeed = new BigNumber(Math.round((i/seconds)*100)).div(100).times(60);
+          msg = "Done " + i + " votes in " + seconds + " seconds! Speed: " + (seconds ? msgSpeed : 1).toString() + " votes/min";
+          msg += "     Sleeping for " + msgSec + " seconds";
+          console.log(msg);
           setTimeout(post, sleep);
         });
       }
@@ -134,31 +145,33 @@ function PostCode(id, name, email) {
 }
 
 post = function() {
-  var randomFirst = randomName.first();
-  var randomLast = randomName.last();
-  var name = randomFirst + " " + randomLast;
-  var subFirst = randomFirst.substr(0, getRandomInt(1, randomFirst.length-1));  // take random number of characters from randomFirst
-  var subLast = randomLast.substr(0, getRandomInt(1, randomLast.length-1));     // take random number of characters from randomLast
-  var separator = separators[getRandomInt(0,separators.length-1)];
-  var emailDomain = emailDomains[getRandomInt(0,emailDomains.length-1)];
-  var id = ids[getRandomInt(0, ids.length-1)];
-  var ename;
-  switch (getRandomInt(0,3)) {
-    case 0:
-      ename = subFirst + separator + subLast;
-      break;
-    case 1:
-      ename = subLast + separator + subFirst;
-      break;
-    case 2:
-      ename = subLast;
-      break;
-    case 3:
-      ename = subFirst;
-      break;
+  if (i++<MAX_VOTES) {
+    var randomFirst = randomName.first();
+    var randomLast = randomName.last();
+    var name = randomFirst + (getRandomInt(0,1) ? "" :" " + (getRandomInt(0,1) ? randomLast.substr(0, 1): randomFirst));
+    var subFirst = randomFirst.substr(0, getRandomInt(1, randomFirst.length-1));  // take random number of characters from randomFirst
+    var subLast = randomLast.substr(0, getRandomInt(1, randomLast.length-1));     // take random number of characters from randomLast
+    var separator = separators[getRandomInt(0,separators.length-1)];
+    var emailDomain = emailDomains[getRandomInt(0,emailDomains.length-1)];
+    var id = ids[getRandomInt(0, ids.length-1)];
+    var ename;
+    switch (getRandomInt(0,3)) {
+      case 0:
+        ename = subFirst + separator + subLast;
+        break;
+      case 1:
+        ename = subLast + separator + subFirst;
+        break;
+      case 2:
+        ename = subLast;
+        break;
+      case 3:
+        ename = subFirst;
+        break;
+    }
+    var email = (ename + "@" + emailDomain).toLowerCase();
+    PostCode(id, name, email);
   }
-  var email = (ename + "@" + emailDomain).toLowerCase();
-  PostCode(id, name, email);
 };
-
+var startTime = moment();
 post();
