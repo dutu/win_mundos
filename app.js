@@ -85,7 +85,7 @@ function PostCode(id, name, email) {
       var msg = now + ": " + str + "    " + cc + ": " + name + "(" + email + ")";
       if (i<MAX_VOTES) {
         var sleep;
-        sleep = getRandomInt(10,4000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,48-SPEED_PER_MIN))));
+        sleep = getRandomInt(10,3000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,48-SPEED_PER_MIN))));
 //        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
 //        sleep = 1;
         fs.appendFile("./posts.log", msg + "\r\n", function(err) {
