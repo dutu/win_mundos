@@ -26,50 +26,20 @@ var emailDomains = ["aol.com", "att.net", "comcast.net", "facebook.com", "gmail.
   "tvcabo.co.mz", "mcel.co.mz","tvcabo.co.mz", "mcel.co.mz","tvcabo.co.mz", "mcel.co.mz","tvcabo.co.mz", "mcel.co.mz"
 ];
 var ids = [
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
-  "563d0d51340b0",      // Chris
 //  "5630ee522478b",      // Arthur
-  "563dd437ca2be",       // Aurelio
 //  "563dd437ca2be",       // Aurelio
-  "5607932d7c149",      // Hon�rio
+  "5634874a24e4f",       // roberta
+  "563487b77db88",      // yara
 //  "5607932d7c149",      // Hon�rio
-  "56346e42e5fab"      // FABRICIO
+//  "56346e42e5fab"      // FABRICIO
 ];
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const MAX_VOTES = 10000;
-const SPEED_PER_MIN = 18;
+const MAX_VOTES = 20000;
+const SPEED_PER_MIN = 1;
 function PostCode(id, name, email) {
   // post string
   var post_data = querystring.stringify({
@@ -115,7 +85,7 @@ function PostCode(id, name, email) {
       var msg = now + ": " + str + "    " + cc + ": " + name + "(" + email + ")";
       if (i<MAX_VOTES) {
         var sleep;
-        sleep = getRandomInt(10,1000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,48-SPEED_PER_MIN))));
+        sleep = getRandomInt(10,4000*1*getRandomInt(1,getRandomInt(1,getRandomInt(1,48-SPEED_PER_MIN))));
 //        sleep = getRandomInt(1000,1000*60*getRandomInt(1,getRandomInt(1,getRandomInt(1,getRandomInt(1,40)))));
 //        sleep = 1;
         fs.appendFile("./posts.log", msg + "\r\n", function(err) {
