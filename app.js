@@ -118,7 +118,7 @@ post = function() {
   if (i++<MAX_VOTES) {
     var randomFirst = randomName.first();
     var randomLast = randomName.last();
-    var name = randomFirst + (getRandomInt(0,1) ? "" :" " + (getRandomInt(0,1) ? randomLast.substr(0, 1): randomFirst));
+    var name = randomFirst + (getRandomInt(0,1) ? "" :" " + (getRandomInt(0,1) ? randomLast.substr(0, 1): randomLast));
     var subFirst = randomFirst.substr(0, getRandomInt(1, randomFirst.length-1));  // take random number of characters from randomFirst
     var subLast = randomLast.substr(0, getRandomInt(1, randomLast.length-1));     // take random number of characters from randomLast
     var separator = separators[getRandomInt(0,separators.length-1)];
